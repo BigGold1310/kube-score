@@ -32,3 +32,31 @@ func TestServiceTargetsDeploymentStrategyNotSet(t *testing.T) {
 	t.Parallel()
 	testExpectedScore(t, "service-target-deployment-strategy-not-set.yaml", "Deployment Strategy", scorecard.GradeWarning)
 }
+
+func TestServiceTargetsDeploymentReplicasOk(t *testing.T) {
+	t.Parallel()
+	testExpectedScore(t, "service-target-deployment.yaml", "Deployment Strategy", scorecard.GradeAllOK)
+}
+
+func TestServiceNotTargetsDeploymentReplicasNotRelevant(t *testing.T) {
+	t.Parallel()
+	// Expecting score 0 as it didn't cot rated
+	skipped := wasSkipped(t, config.Configuration{
+		AllFiles: []ks.NamedReader{testFile("service-not-target-deployment.yaml")},
+	}, "Deployment Strategy")
+	assert.True(t, skipped)
+}
+
+func TestServiceTargetsDeploymentReplicasNok(t *testing.T) {
+	t.Parallel()
+	testExpectedScore(t, "service-target-deployment-replica-1.yaml", "Deployment Strategy", scorecard.GradeWarning)
+}
+
+func TestHPATargetsDeployment(t *testing.T) {
+	t.Parallel()
+	// Expecting score 0 as it didn't cot rated
+	skipped := wasSkipped(t, config.Configuration{
+		AllFiles: []ks.NamedReader{testFile("hpa-target-deployment.yaml")},
+	}, "Deployment Strategy")
+	assert.True(t, skipped)
+}
