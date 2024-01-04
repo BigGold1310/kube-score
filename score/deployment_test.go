@@ -1,11 +1,11 @@
 package score
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/zegl/kube-score/config"
 	ks "github.com/zegl/kube-score/domain"
-	"testing"
-
 	"github.com/zegl/kube-score/scorecard"
 )
 
