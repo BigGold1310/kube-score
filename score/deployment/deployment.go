@@ -7,6 +7,7 @@ import (
 	"github.com/zegl/kube-score/scorecard"
 	v1 "k8s.io/api/apps/v1"
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
+	"k8s.io/utils/ptr"
 )
 
 func Register(allChecks *checks.Checks, all ks.AllTypes) {
@@ -94,7 +95,7 @@ func deploymentReplicas(svcs []ks.Service, hpas []ks.HpaTargeter) func(deploymen
 			score.Skipped = true
 			score.AddComment("", "Skipped as the deployment replicas does not matter if not targeted by service or if managed by HorizontalPodAutoscaler", "")
 		} else {
-			if deployment.Spec.Replicas != nil && *deployment.Spec.Replicas >= int32(2) {
+			if ptr.Deref(deployment.Spec.Replicas, 1) >= 2 {
 				score.Grade = scorecard.GradeAllOK
 			} else {
 				score.Grade = scorecard.GradeWarning
